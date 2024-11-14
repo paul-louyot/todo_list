@@ -62,7 +62,7 @@ const onDelay = (id) => {
 const onCheck = (id) => {
   const task = tasks.value.find(task => task.id === id)
   const index = tasks.value.findIndex(task => task.id === id)
-  const newIndex = task.done ? 0 : lastUndoneIndex.value + 1;
+  const newIndex = task.done ? 0 : lastUndoneIndex.value;
   task.done = !task.done
   tasks.value.splice(index, 1)
   insertAtIndex(newIndex, task)
@@ -82,8 +82,8 @@ const onDelete = (id) => {
       @keyup.ctrl.enter.exact="onEnter"
       @keyup.meta.enter.exact="onEnter"></textarea>
       <button
-        class="btn btn-primary btn-sm shadow"
-        :class="{'invisible': inputText.length < 3}"
+        class="btn btn-primary btn-sm shadow invisible opacity-0 transition-opacity duration-300 ease-linear"
+        :class="{'visible-animate': inputText.length >= 3}"
         @click="createTasks">Create tasks</button>
   </div>
   <div class="flex flex-col gap-4 relative w-100">
@@ -122,4 +122,9 @@ const onDelete = (id) => {
   position: absolute;
   left: 0;
   right: 0;
-}</style>
+}
+
+.visible-animate {
+  @apply visible opacity-100;
+}
+</style>
