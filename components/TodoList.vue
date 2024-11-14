@@ -74,8 +74,7 @@ const onDelete = (id) => {
 </script>
 
 <template>
-  <div class="max-w-2xl mx-auto p-4 space-y-4">
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-4 ">
 
       <textarea class="textarea shadow rounded" :placeholder="placeholder" v-model="inputText"
       autofocus
@@ -85,23 +84,22 @@ const onDelete = (id) => {
         class="btn btn-primary btn-sm shadow invisible opacity-0 transition-opacity duration-300 ease-linear"
         :class="{'visible-animate': inputText.length >= 3}"
         @click="createTasks">Create tasks</button>
-  </div>
-  <div class="flex flex-col gap-4 relative w-100">
-    <TransitionGroup name="list">
-        <AppTask
-          v-for="(task, index) in tasks"
-          class="w-100"
-          :key="task.id"
-          v-bind="task"
-          :showDelay="index !== lastUndoneIndex"
-          @delete="onDelete(task.id)"
-          @delay="onDelay(task.id)"
-          @check="onCheck(task.id)"
-        />
-      <!-- <AppTask v-for="task in doneTasks" :key="task.id" v-model="task.done" :text="task.text"/> -->
-    </TransitionGroup>
-  </div>
-</div>
+    </div>
+    <div class="flex flex-col gap-4 relative w-100">
+      <TransitionGroup name="list">
+          <AppTask
+            v-for="(task, index) in tasks"
+            class="w-100"
+            :key="task.id"
+            v-bind="task"
+            :showDelay="index !== lastUndoneIndex"
+            @delete="onDelete(task.id)"
+            @delay="onDelay(task.id)"
+            @check="onCheck(task.id)"
+          />
+        <!-- <AppTask v-for="task in doneTasks" :key="task.id" v-model="task.done" :text="task.text"/> -->
+      </TransitionGroup>
+    </div>
 
 </template>
 
