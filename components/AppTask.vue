@@ -7,6 +7,7 @@ const props = defineProps({
   done: Boolean,
   showDelay: Boolean
 })
+const canHover = useCanHover()
 const taskRef = ref()
 const isHovered = useElementHover(taskRef)
 const textRef = ref()
@@ -41,7 +42,7 @@ useEventListener(window, 'resize', checkEllipsis)
       {{text}}
     </div>
     <div class="flex">
-      <template v-if="!done && isHovered">
+      <template v-if="!done && (isHovered || !canHover)">
         <button v-if="showDelay" class="btn btn-sm btn-ghost px-2" @click="emit('delay')">
           <ArrowDownIcon class="size-5"/>
         </button>
