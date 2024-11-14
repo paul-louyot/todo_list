@@ -1,18 +1,17 @@
 <script setup>
-import { breakpointsTailwind } from '@vueuse/core'
-
+// import { breakpointsTailwind } from '@vueuse/core'
 // const TEST_INPUT = 'task 1\ntask2\ntask_3\nauirestauie\nnrstauinrestauienrs\nstue'
 
 const tasks = ref([])
 const inputText = ref('')
+const markingAsDone = ref(false)
 let idCounter = 0;
-const breakpoints = useBreakpoints(breakpointsTailwind)
-const largerThanSm = breakpoints.greater('sm') // only larger than sm
-const smAndSmaller = breakpoints.smallerOrEqual('sm') // only smaller than lg
-
-const isMac = computed(()=>{
-  return navigator?.userAgent.includes('Mac')
-})
+// const breakpoints = useBreakpoints(breakpointsTailwind)
+// const largerThanSm = breakpoints.greater('sm') // only larger than sm
+// const smAndSmaller = breakpoints.smallerOrEqual('sm') // only smaller than lg
+// const isMac = computed(()=>{
+//   return navigator?.userAgent.includes('Mac')
+// })
 
 const placeholder = computed(()=>{
   let string = 'one task per line'
@@ -21,27 +20,6 @@ const placeholder = computed(()=>{
 
   // if (isMac.value) return string + ' ⌘ + enter to create'
   // return string + ' ctrl + enter to create'
-})
-
-const createTasks = ()=>{
-  const rawTasks = inputText.value.split('\n').filter(e=>e)
-  rawTasks.forEach(element => {
-    tasks.value.push({
-      text: element,
-      done: false,
-      id: idCounter,
-    })
-    idCounter++;
-    inputText.value = ''
-  });
-}
-createTasks()
-
-const undoneTasks = computed(()=>{
-  return tasks.value.filter(task=>!task.done)
-})
-const doneTasks = computed(()=>{
-  return tasks.value.filter(task=>task.done)
 })
 const lastUndoneIndex = computed(()=>{
   for (let i = tasks.value.length - 1; i >= 0; i--) {
@@ -52,6 +30,21 @@ const lastUndoneIndex = computed(()=>{
 const insertAtIndex = (index, task) => {
   tasks.value.splice(index, 0, task)
 }
+const createTasks = ()=>{
+  const rawTasks = inputText.value.split('\n').filter(e => e)
+  inputText.value = ''
+  rawTasks.forEach(element => {
+    const task = {
+      text: element,
+      done: false,
+      id: idCounter,
+    }
+    insertAtIndex(lastUndoneIndex.value + 1, task)
+    idCounter++;
+  });
+}
+createTasks()
+
 const onDelay = (id) => {
   const index = tasks.value.findIndex(task => task.id === id)
   // remove task
@@ -63,9 +56,16 @@ const onCheck = (id) => {
   const task = tasks.value.find(task => task.id === id)
   const index = tasks.value.findIndex(task => task.id === id)
   const newIndex = task.done ? 0 : lastUndoneIndex.value;
+  if (!task.done) markingAsDone.value = true;
+
   task.done = !task.done
   tasks.value.splice(index, 1)
   insertAtIndex(newIndex, task)
+  if(markingAsDone.value){
+    setTimeout(() => {
+      markingAsDone.value = false;
+    }, 1300);
+  }
 }
 const onDelete = (id) => {
   const index = tasks.value.findIndex(task => task.id === id)
@@ -85,11 +85,15 @@ const onDelete = (id) => {
         :class="{'visible-animate': inputText.length >= 3}"
         @click="createTasks">Create tasks</button>
     </div>
-    <div class="flex flex-col gap-4 relative w-100">
+    <div class="flex flex-col gap-4 relative w-100" :class="{'marking-as-done': markingAsDone}">
       <TransitionGroup name="list">
           <AppTask
             v-for="(task, index) in tasks"
             class="w-100"
+            :class="{
+              'task--done': task.done,
+              'task--undone': !task.done,
+            }"
             :key="task.id"
             v-bind="task"
             :showDelay="index !== lastUndoneIndex"
@@ -104,16 +108,18 @@ const onDelete = (id) => {
 </template>
 
 <style scoped>
-.list-move,
-.list-enter-active,
-.list-leave-active {
+.list-enter-active, .list-move, .list-leave-active {
   transition: all 0.3s ease;
 }
+.marking-as-done .list-enter-active, .marking-as-done .list-move, .marking-as-done .list-leave-active {
+  transition-delay: 1s;
+}
 
-.list-enter-from,
-.list-leave-to {
+.list-enter-from, .list-leave-to {
   opacity: 0;
-  transform: translateX(10px);
+}
+.list-leave-to {
+  transform: translateX(30px);
 }
 
 .list-leave-active {
