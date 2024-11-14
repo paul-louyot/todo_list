@@ -27,7 +27,10 @@ useEventListener(window, 'resize', checkEllipsis)
   <div
     ref="taskRef"
     class="flex items-center gap-4 p-4 shadow rounded-lg bg-base-100"
-    :class="{'shadow-md': isHovered}"
+    :class="{
+      'shadow-md': isHovered,
+      'task-done': done
+    }"
   >
     <div
       class="task-text flex-1 truncate relative min-w-8 h-8 flex items-center"
@@ -38,7 +41,7 @@ useEventListener(window, 'resize', checkEllipsis)
       {{text}}
     </div>
     <div class="flex">
-      <template v-if="!done && true /*isHovered*/">
+      <template v-if="!done && isHovered">
         <button v-if="showDelay" class="btn btn-sm btn-ghost px-2" @click="emit('delay')">
           <ArrowDownIcon class="size-5"/>
         </button>
@@ -51,7 +54,12 @@ useEventListener(window, 'resize', checkEllipsis)
         <ArrowUturnLeftIcon v-else class="size-5"/>
       </button>
     </div>
-
-    <!-- <input type="checkbox" class="checkbox" v-model="model"/> -->
   </div>
 </template>
+
+<style scoped>
+.task-done {
+  /* same as textarea placeholder */
+  color: #9ca3af;
+}
+</style>

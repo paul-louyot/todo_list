@@ -28,7 +28,7 @@ export default {
         "warning": "oklch(88.37% 0.135 79.94)",
         "error": "oklch(78.66% 0.15 28.47)",
         "--rounded-box": "0.25rem",
-        "--rounded-btn": "0.25rem", // customized
+        "--rounded-btn": "0.25rem", // increased
         "--rounded-badge": "0.125rem",
         "--tab-radius": "0.125rem",
         "--animation-btn": "0",
