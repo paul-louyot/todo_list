@@ -1,10 +1,13 @@
 <script setup>
 // import { breakpointsTailwind } from '@vueuse/core'
-// const TEST_INPUT = 'task 1'
-// const TEST_INPUT = 'task 1\ntask2\ntask_3\nauirestauie\nnrstauinrestauienrs\nstue'
-const TEST_INPUT = ''
-const inputText = ref(TEST_INPUT)
+let BASE_INPUT;
+BASE_INPUT = ''
+// BASE_INPUT = 'task 1'
+// BASE_INPUT = 'task 1\ntask2'
+// BASE_INPUT = 'task 1\ntask2\ntask_3\nauirestauie\nnrstauinrestauienrs\nstue'
+const inputText = ref(BASE_INPUT)
 const tasks = ref([])
+
 let idCounter = 0;
 // const breakpoints = useBreakpoints(breakpointsTailwind)
 // const largerThanSm = breakpoints.greater('sm') // only larger than sm
