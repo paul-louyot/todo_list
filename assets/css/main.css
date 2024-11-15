@@ -2,11 +2,6 @@
   background-color: #F2F2F2;
 }
 
-.textareaa {
-  @apply min-h-[3rem] shrink;
-  @apply px-4 py-2 text-sm leading-loose;
-  @apply bg-base-100 rounded-btn border border-transparent;
-}
-.textareaa:focus {
-  @apply outline-none border-primary;
+.textarea:focus {
+  @apply outline-1 border-transparent shadow;
 }

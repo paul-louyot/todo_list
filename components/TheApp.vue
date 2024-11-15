@@ -1,10 +1,10 @@
 <script setup>
 // import { breakpointsTailwind } from '@vueuse/core'
+// const TEST_INPUT = 'task 1'
 // const TEST_INPUT = 'task 1\ntask2\ntask_3\nauirestauie\nnrstauinrestauienrs\nstue'
-
+const TEST_INPUT = ''
+const inputText = ref(TEST_INPUT)
 const tasks = ref([])
-const inputText = ref('')
-const markingAsDone = ref(false)
 let idCounter = 0;
 // const breakpoints = useBreakpoints(breakpointsTailwind)
 // const largerThanSm = breakpoints.greater('sm') // only larger than sm
@@ -43,7 +43,7 @@ const createTasks = ()=>{
     idCounter++;
   });
 }
-createTasks()
+createTasks() // TODO remove this
 
 const onDelay = (id) => {
   const index = tasks.value.findIndex(task => task.id === id)
@@ -56,16 +56,10 @@ const onCheck = (id) => {
   const task = tasks.value.find(task => task.id === id)
   const index = tasks.value.findIndex(task => task.id === id)
   const newIndex = task.done ? 0 : lastUndoneIndex.value;
-  if (!task.done) markingAsDone.value = true;
 
   task.done = !task.done
   tasks.value.splice(index, 1)
   insertAtIndex(newIndex, task)
-  if(markingAsDone.value){
-    setTimeout(() => {
-      markingAsDone.value = false;
-    }, 1300);
-  }
 }
 const onDelete = (id) => {
   const index = tasks.value.findIndex(task => task.id === id)
@@ -76,7 +70,7 @@ const onDelete = (id) => {
 <template>
     <div class="flex flex-col gap-4 ">
 
-      <textarea class="textareaa shadow rounded" :placeholder="placeholder" v-model="inputText"
+      <textarea class="textarea shadow rounded" :placeholder="placeholder" v-model="inputText"
       autofocus
       @keyup.ctrl.enter.exact="onEnter"
       @keyup.meta.enter.exact="onEnter"></textarea>
@@ -85,7 +79,7 @@ const onDelete = (id) => {
         :class="{'visible-animate': inputText.length >= 3}"
         @click="createTasks">Create tasks</button>
     </div>
-    <div class="flex flex-col gap-4 relative w-100" :class="{'marking-as-done': markingAsDone}">
+    <div class="flex flex-col gap-4 relative w-100">
       <TransitionGroup name="list">
           <AppTask
             v-for="(task, index) in tasks"
@@ -101,7 +95,6 @@ const onDelete = (id) => {
             @delay="onDelay(task.id)"
             @check="onCheck(task.id)"
           />
-        <!-- <AppTask v-for="task in doneTasks" :key="task.id" v-model="task.done" :text="task.text"/> -->
       </TransitionGroup>
     </div>
 
@@ -111,10 +104,6 @@ const onDelete = (id) => {
 .list-enter-active, .list-move, .list-leave-active {
   transition: all 0.3s ease;
 }
-.marking-as-done .list-enter-active, .marking-as-done .list-move, .marking-as-done .list-leave-active {
-  transition-delay: 1s;
-}
-
 .list-enter-from, .list-leave-to {
   opacity: 0;
 }
