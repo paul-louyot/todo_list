@@ -76,7 +76,7 @@ const onDelete = (id) => {
 <template>
     <div class="flex flex-col gap-4 ">
 
-      <textarea class="textarea shadow rounded" :placeholder="placeholder" v-model="inputText"
+      <textarea class="textareaa shadow rounded" :placeholder="placeholder" v-model="inputText"
       autofocus
       @keyup.ctrl.enter.exact="onEnter"
       @keyup.meta.enter.exact="onEnter"></textarea>

@@ -33,6 +33,11 @@ useEventListener(window, 'resize', checkEllipsis)
       'task-done': done
     }"
   >
+    <button class="btn btn-sm btn-ghost px-2" @click="emit('check')">
+      <CheckIcon v-if="!done" class="size-5"/>
+      <ArrowUturnLeftIcon v-else class="size-5"/>
+    </button>
+
     <div
       class="task-text flex-1 truncate relative min-w-8 h-8 flex items-center"
       :class="{'line-through': done}"
@@ -41,18 +46,13 @@ useEventListener(window, 'resize', checkEllipsis)
     >
       {{text}}
     </div>
-    <div class="flex">
-      <template v-if="!done && (isHovered || !canHover)">
-        <button v-if="showDelay" class="btn btn-sm btn-ghost px-2" @click="emit('delay')">
-          <ArrowDownIcon class="size-5"/>
-        </button>
-        <button class="btn btn-sm btn-ghost px-2" @click="emit('delete')">
-          <XMarkIcon class="size-5"/>
-        </button>
-      </template>
-      <button class="btn btn-sm btn-ghost px-2" @click="emit('check')">
-        <CheckIcon v-if="!done" class="size-5"/>
-        <ArrowUturnLeftIcon v-else class="size-5"/>
+
+    <div class="flex" v-if="!done && (isHovered || !canHover)">
+      <button v-if="showDelay" class="btn btn-sm btn-ghost px-2" @click="emit('delay')">
+        <ArrowDownIcon class="size-5"/>
+      </button>
+      <button class="btn btn-sm btn-ghost px-2" @click="emit('delete')">
+        <XMarkIcon class="size-5"/>
       </button>
     </div>
   </div>
