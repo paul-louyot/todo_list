@@ -9,6 +9,8 @@ const inputText = ref(BASE_INPUT)
 const tasks = ref([])
 const textAreaRef = ref()
 const isHovered = useElementHover(textAreaRef);
+const delayedId = ref(null)
+const checkedId = ref(null)
 
 let idCounter = 0;
 // const breakpoints = useBreakpoints(breakpointsTailwind)
@@ -51,20 +53,30 @@ const createTasks = ()=>{
 createTasks() // TODO remove this
 
 const onDelay = (id) => {
+  delayedId.value = id;
   const index = tasks.value.findIndex(task => task.id === id)
   // remove task
   const task = tasks.value.splice(index, 1)[0]
   // insert it at right place
   insertAtIndex(lastUndoneIndex.value + 1, task)
+  setTimeout(() => {
+    delayedId.value = null;
+  }, 300);
 }
 const onCheck = (id) => {
+  checkedId.value = id;
   const task = tasks.value.find(task => task.id === id)
   const index = tasks.value.findIndex(task => task.id === id)
   const newIndex = task.done ? 0 : lastUndoneIndex.value;
 
+  textAreaRef.value.focus();
   task.done = !task.done
-  tasks.value.splice(index, 1)
+  tasks.value.splice(index, 1);
   insertAtIndex(newIndex, task)
+  setTimeout(() => {
+    checkedId.value = null;
+  }, 300); // transition duration
+
 }
 const onDelete = (id) => {
   const index = tasks.value.findIndex(task => task.id === id)
@@ -95,14 +107,17 @@ const onDelete = (id) => {
       <TransitionGroup name="list">
           <AppTask
             v-for="(task, index) in tasks"
-            class="w-100"
+            class="w-100 z-10"
             :class="{
               'task--done': task.done,
               'task--undone': !task.done,
+              'task--delayed': task.id === delayedId,
+              'task--checked': task.id === checkedId,
             }"
             :key="task.id"
             v-bind="task"
             :showDelay="index !== lastUndoneIndex"
+            :data-id="task.id"
             @delete="onDelete(task.id)"
             @delay="onDelay(task.id)"
             @check="onCheck(task.id)"
@@ -127,6 +142,9 @@ const onDelete = (id) => {
   position: absolute;
   left: 0;
   right: 0;
+}
+.task--delayed, .task--checked {
+  z-index: 5;
 }
 
 .visible-animate {
