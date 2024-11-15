@@ -37,7 +37,7 @@ const lastUndoneIndex = computed(()=>{
 const insertAtIndex = (index, task) => {
   tasks.value.splice(index, 0, task)
 }
-const createTasks = ()=>{
+const createTasks = () => {
   const rawTasks = inputText.value.split('\n').filter(e => e)
   inputText.value = ''
   rawTasks.forEach(element => {
@@ -49,6 +49,7 @@ const createTasks = ()=>{
     insertAtIndex(lastUndoneIndex.value + 1, task)
     idCounter++;
   });
+  textAreaRef.value?.focus();
 }
 createTasks() // TODO remove this
 
