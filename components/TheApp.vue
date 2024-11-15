@@ -7,6 +7,8 @@ BASE_INPUT = ''
 // BASE_INPUT = 'task 1\ntask2\ntask_3\nauirestauie\nnrstauinrestauienrs\nstue'
 const inputText = ref(BASE_INPUT)
 const tasks = ref([])
+const textAreaRef = ref()
+const isHovered = useElementHover(textAreaRef);
 
 let idCounter = 0;
 // const breakpoints = useBreakpoints(breakpointsTailwind)
@@ -73,10 +75,17 @@ const onDelete = (id) => {
 <template>
     <div class="flex flex-col gap-4 ">
 
-      <textarea class="textarea shadow rounded" :placeholder="placeholder" v-model="inputText"
-      autofocus
-      @keyup.ctrl.enter.exact="onEnter"
-      @keyup.meta.enter.exact="onEnter"></textarea>
+      <textarea
+        ref="textAreaRef"
+        class="textarea shadow rounded"
+        :class="{
+          'shadow-md': isHovered
+        }"
+        :placeholder="placeholder"
+        v-model="inputText"
+        autofocus
+        @keyup.ctrl.enter.exact="onEnter"
+        @keyup.meta.enter.exact="onEnter"></textarea>
       <button
         class="btn btn-primary btn-sm shadow invisible opacity-0 transition-opacity duration-300 ease-linear"
         :class="{'visible-animate': inputText.length >= 3}"

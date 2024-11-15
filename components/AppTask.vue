@@ -42,10 +42,10 @@ const onCheck = () => {
     ref="taskRef"
     class="task"
     :class="{
-      'shadow-md': isHovered,
       'task-will-be-checked': willBeChecked,
       'task-done': done,
       'task-undone': !done,
+      'task-is-hovered': isHovered
     }"
   >
     <div
@@ -80,7 +80,9 @@ const onCheck = () => {
 .task {
   @apply flex items-center gap-4 p-4 shadow rounded-lg bg-base-100;
 }
-
+.task.task-is-hovered {
+  @apply shadow-md;
+}
 .task-will-be-checked {
   @apply line-through;
 }
