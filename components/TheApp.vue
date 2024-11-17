@@ -1,5 +1,6 @@
 <script setup>
 import { useStorage } from '@vueuse/core'
+import confetti from 'canvas-confetti';
 
 // import { breakpointsTailwind } from '@vueuse/core'
 let BASE_INPUT;
@@ -43,6 +44,9 @@ const maxId = computed(() => {
 const textAreaRows = computed(() => {
   return inputText.value.split("\n").length;
 })
+const undoneCount = computed(() => {
+  return tasks.value.filter(t => !t.done).length
+})
 const insertAtIndex = (index, task) => {
   tasks.value.splice(index, 0, task)
 }
@@ -74,6 +78,17 @@ const onDelay = (id) => {
     delayedId.value = null;
   }, 300);
 }
+const onDone = (id) => {
+  if(undoneCount.value > 1) return;
+  const task = tasks.value.find(task => task.id === id)
+  if(!task.done){
+    confetti({
+      disableForReducedMotion: true,
+      particleCount: 100,
+      spread: 90
+    })
+  }
+}
 const onCheck = (id) => {
   checkedId.value = id;
   const task = tasks.value.find(task => task.id === id)
@@ -93,6 +108,16 @@ const onDelete = (id) => {
   const index = tasks.value.findIndex(task => task.id === id)
   tasks.value.splice(index, 1)
 }
+const onCtrlBackspace = () => {
+  let index = 0;
+  while (tasks.value.length && index < tasks.value.length) {
+    if(tasks.value[index].done){
+      tasks.value.splice(index, 1)
+    } else {
+      index++;
+    }
+  }
+}
 </script>
 
 <template>
@@ -107,6 +132,7 @@ const onDelete = (id) => {
         v-model="inputText"
         :rows="textAreaRows"
         autofocus
+        @keyup.ctrl.backspace.exact="onCtrlBackspace"
         @keyup.ctrl.enter.exact="onEnter"
         @keyup.meta.enter.exact="onEnter"></textarea>
       <button
@@ -132,6 +158,7 @@ const onDelete = (id) => {
             @delete="onDelete(task.id)"
             @delay="onDelay(task.id)"
             @check="onCheck(task.id)"
+            @done="onDone(task.id)"
           />
       </TransitionGroup>
     </div>

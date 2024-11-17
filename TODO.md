@@ -3,6 +3,8 @@ https://github.com/tailwindlabs/heroicons?tab=readme-ov-file
 
 
 - [x] localStorage
-- [ ] add confettis
-- [ ] fix close animation
+- [x] add confettis
+- [ ] fix delete animation
+- [ ] add keyboard shortcut instructions
+
 

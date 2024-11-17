@@ -12,7 +12,7 @@ const taskRef = ref()
 const isHovered = useElementHover(taskRef)
 const textRef = ref()
 const willBeChecked = ref(false)
-const emit = defineEmits(['delete', 'delay', 'check'])
+const emit = defineEmits(['delete', 'delay', 'check', 'revert', 'done'])
 const isTextEllipsized = ref(false)
 const checkEllipsis = useDebounceFn(() => {
   if (textRef.value) {
@@ -24,6 +24,7 @@ onMounted(checkEllipsis)
 useEventListener(window, 'resize', checkEllipsis)
 
 const onCheck = () => {
+  props.done ? emit('revert') : emit('done')
   if(props.done){
     emit('check')
   } else {
