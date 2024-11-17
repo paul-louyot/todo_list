@@ -1,4 +1,6 @@
 <script setup>
+import { useStorage } from '@vueuse/core'
+
 // import { breakpointsTailwind } from '@vueuse/core'
 let BASE_INPUT;
 BASE_INPUT = ''
@@ -6,7 +8,7 @@ BASE_INPUT = ''
 // BASE_INPUT = 'task 1\ntask2'
 // BASE_INPUT = 'task 1\ntask2\ntask_3\nauirestauie\nnrstauinrestauienrs\nstue'
 const inputText = ref(BASE_INPUT)
-const tasks = ref([])
+const tasks = useStorage('tasks', [])
 const textAreaRef = ref()
 const isHovered = useElementHover(textAreaRef);
 const delayedId = ref(null)
