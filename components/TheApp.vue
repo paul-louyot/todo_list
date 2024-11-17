@@ -12,7 +12,6 @@ const isHovered = useElementHover(textAreaRef);
 const delayedId = ref(null)
 const checkedId = ref(null)
 
-let idCounter = 0;
 // const breakpoints = useBreakpoints(breakpointsTailwind)
 // const largerThanSm = breakpoints.greater('sm') // only larger than sm
 // const smAndSmaller = breakpoints.smallerOrEqual('sm') // only smaller than lg
@@ -34,20 +33,30 @@ const lastUndoneIndex = computed(()=>{
   }
   return -1;
 })
+const maxId = computed(() => {
+  if (!tasks.value.length) return -1;
+
+  return Math.max(...tasks.value.map(t => t.id))
+})
+const textAreaRows = computed(() => {
+  return inputText.value.split("\n").length;
+})
 const insertAtIndex = (index, task) => {
   tasks.value.splice(index, 0, task)
 }
 const createTasks = () => {
+  let counter = maxId.value + 1;
+
   const rawTasks = inputText.value.split('\n').filter(e => e)
   inputText.value = ''
   rawTasks.forEach(element => {
     const task = {
       text: element,
       done: false,
-      id: idCounter,
+      id: counter,
     }
     insertAtIndex(lastUndoneIndex.value + 1, task)
-    idCounter++;
+    counter++;
   });
   textAreaRef.value?.focus();
 }
@@ -58,7 +67,6 @@ const onDelay = (id) => {
   const index = tasks.value.findIndex(task => task.id === id)
   // remove task
   const task = tasks.value.splice(index, 1)[0]
-  // insert it at right place
   insertAtIndex(lastUndoneIndex.value + 1, task)
   setTimeout(() => {
     delayedId.value = null;
@@ -87,7 +95,6 @@ const onDelete = (id) => {
 
 <template>
     <div class="flex flex-col gap-4 ">
-
       <textarea
         ref="textAreaRef"
         class="textarea shadow rounded"
@@ -96,6 +103,7 @@ const onDelete = (id) => {
         }"
         :placeholder="placeholder"
         v-model="inputText"
+        :rows="textAreaRows"
         autofocus
         @keyup.ctrl.enter.exact="onEnter"
         @keyup.meta.enter.exact="onEnter"></textarea>
@@ -125,7 +133,6 @@ const onDelete = (id) => {
           />
       </TransitionGroup>
     </div>
-
 </template>
 
 <style scoped>
