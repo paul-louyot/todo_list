@@ -15,20 +15,9 @@ const isHovered = useElementHover(textAreaRef);
 const delayedId = ref(null)
 const checkedId = ref(null)
 
-// const breakpoints = useBreakpoints(breakpointsTailwind)
-// const largerThanSm = breakpoints.greater('sm') // only larger than sm
-// const smAndSmaller = breakpoints.smallerOrEqual('sm') // only smaller than lg
-// const isMac = computed(()=>{
-//   return navigator?.userAgent.includes('Mac')
-// })
-
 const placeholder = computed(()=>{
   let string = 'one task per line'
   return string
-  // if (smAndSmaller.value) return string;
-
-  // if (isMac.value) return string + ' ⌘ + enter to create'
-  // return string + ' ctrl + enter to create'
 })
 const lastUndoneIndex = computed(()=>{
   for (let i = tasks.value.length - 1; i >= 0; i--) {
