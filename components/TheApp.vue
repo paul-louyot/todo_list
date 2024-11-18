@@ -2,7 +2,6 @@
 import { useStorage } from '@vueuse/core'
 import confetti from 'canvas-confetti';
 
-// import { breakpointsTailwind } from '@vueuse/core'
 let BASE_INPUT;
 BASE_INPUT = ''
 // BASE_INPUT = 'task 1'
@@ -16,7 +15,7 @@ const delayedId = ref(null)
 const checkedId = ref(null)
 
 const placeholder = computed(()=>{
-  let string = 'one task per line'
+  let string = 'one task per line. ?? for help'
   return string
 })
 const lastUndoneIndex = computed(()=>{
@@ -107,6 +106,13 @@ const onCtrlBackspace = () => {
     }
   }
 }
+watch(inputText, () => {
+  if(inputText.value.includes('??')){
+    inputText.value = inputText.value.replace('??', '')
+    const dialog = document.getElementById('help-dialog');
+    dialog.showModal();
+  }
+})
 </script>
 
 <template>
@@ -125,9 +131,9 @@ const onCtrlBackspace = () => {
         @keyup.ctrl.enter.exact="onEnter"
         @keyup.meta.enter.exact="onEnter"></textarea>
       <button
-        class="btn btn-primary btn-sm shadow invisible opacity-0 transition-opacity duration-300 ease-linear"
+        class="btn btn-primary btn-ghost btn-sm shadow invisible opacity-0 transition-opacity duration-300 ease-linear"
         :class="{'visible-animate': inputText.length >= 3}"
-        @click="createTasks">Create tasks</button>
+        @click="createTasks">🚀</button>
     </div>
     <div class="flex flex-col gap-4 relative w-100">
       <TransitionGroup name="list">
@@ -151,6 +157,20 @@ const onCtrlBackspace = () => {
           />
       </TransitionGroup>
     </div>
+    <dialog id="help-dialog" class="modal">
+      <div class="modal-box">
+        <p class="py-4">
+          <kbd class="kbd">ctrl</kbd>
+          +
+          <kbd class="kbd">backspace</kbd>
+          to delete done tasks
+        </p>
+      </div>
+      <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+      </form>
+    </dialog>
+
 </template>
 
 <style scoped>

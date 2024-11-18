@@ -6,5 +6,6 @@ https://github.com/tailwindlabs/heroicons?tab=readme-ov-file
 - [x] add confettis
 - [ ] fix delete animation
 - [ ] add keyboard shortcut instructions
+- [ ] add linter
 
 
