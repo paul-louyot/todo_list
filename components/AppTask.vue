@@ -10,18 +10,8 @@ const props = defineProps({
 const canHover = useCanHover()
 const taskRef = ref()
 const isHovered = useElementHover(taskRef)
-const textRef = ref()
 const willBeChecked = ref(false)
 const emit = defineEmits(['delete', 'delay', 'check', 'revert', 'done'])
-const isTextEllipsized = ref(false)
-const checkEllipsis = useDebounceFn(() => {
-  if (textRef.value) {
-    isTextEllipsized.value = textRef.value.scrollWidth > textRef.value.clientWidth;
-  }
-}, 100);
-
-onMounted(checkEllipsis)
-useEventListener(window, 'resize', checkEllipsis)
 
 const onCheck = () => {
   props.done ? emit('revert') : emit('done')
@@ -50,12 +40,11 @@ const onCheck = () => {
     }"
   >
     <div
-      class="task-text flex-1 truncate relative min-w-8 h-8 flex items-center"
-      :class="{'line-through': done}"
-      ref="textRef"
-      :title="isTextEllipsized ? text : ''"
+      class="flex-1 min-w-8 min-h-8 flex items-center"
     >
-      {{ text }}
+      <p class="task-text">
+        {{ text }}
+      </p>
     </div>
 
     <div class="flex" >
@@ -113,5 +102,11 @@ const onCheck = () => {
 }
 .task-undone .icon-uturn {
   @apply hidden;
+}
+.task-text {
+  @apply w-full break-words;
+}
+.task-done .task-text {
+  @apply line-through;
 }
 </style>
