@@ -96,7 +96,7 @@ const onDelete = (id) => {
   const index = tasks.value.findIndex(task => task.id === id)
   tasks.value.splice(index, 1)
 }
-const onCtrlBackspace = () => {
+const deleteDoneTasks = () => {
   let index = 0;
   while (tasks.value.length && index < tasks.value.length) {
     if(tasks.value[index].done){
@@ -111,6 +111,10 @@ watch(inputText, () => {
     inputText.value = inputText.value.replace('??', '')
     const dialog = document.getElementById('help-dialog');
     dialog.showModal();
+  }
+  if(inputText.value.startsWith('?d')){
+    inputText.value = '';
+    deleteDoneTasks();
   }
 })
 </script>
@@ -127,7 +131,7 @@ watch(inputText, () => {
         v-model="inputText"
         :rows="textAreaRows"
         autofocus
-        @keyup.ctrl.backspace.exact="onCtrlBackspace"
+        @keyup.ctrl.backspace.exact="deleteDoneTasks"
         @keyup.ctrl.enter.exact="onEnter"
         @keyup.meta.enter.exact="onEnter"></textarea>
       <button
@@ -159,12 +163,24 @@ watch(inputText, () => {
     </div>
     <dialog id="help-dialog" class="modal">
       <div class="modal-box">
-        <p class="py-4">
-          <kbd class="kbd">ctrl</kbd>
-          +
-          <kbd class="kbd">backspace</kbd>
-          to delete done tasks
-        </p>
+        <div class="overflow-x-auto">
+          <table class="table">
+            <tbody>
+              <tr>
+                <td>
+                  <kbd class="kbd">?d</kbd>
+                  or
+                  <div>
+                    <kbd class="kbd">ctrl</kbd>
+                    +
+                    <kbd class="kbd">backspace</kbd>
+                  </div>
+                </td>
+                <td>Delete done tasks</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <form method="dialog" class="modal-backdrop">
         <button>close</button>
